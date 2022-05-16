@@ -1,0 +1,39 @@
+Example pseudo code for program that returns the sum of two numbers.
+  First, casual:
+
+  Intake two numbers provided by the user.
+  Add the first number and the second number and store the sum to a variable.
+  Return that variable.
+
+  Now, formal:
+
+  START
+  GET first number from user
+  GET second number from user
+
+  SET sum = first number + second number
+
+  RETURN sum
+  END
+
+
+  Example pseudocode that has: a function that determines the index of the 3rd occurrence of a given character in a string. For instance, if the given character is 'x' and the string is 'axbxcdxex', the function should return 6 (the index of the 3rd 'x'). If the given character does not occur at least 3 times, return null.
+
+  First, casual:
+
+  Have the function take the string and character as arguments.
+  Create a variable that stores how many times the character has appeared so far in the string.
+  Iterate over the string, adding 1 to the counter variable each time our character argument appears.
+  When the counter reaches 3, break the loop and return the iterator's value.
+
+  Now, formal:
+
+  GET str from user
+  GET char from user.
+
+  SET counter = 0
+  FOR iterator over the full length of str
+  IF the value at str[iterator] === char
+  counter += 1
+  IF counter = 3
+  RETURN iterator
