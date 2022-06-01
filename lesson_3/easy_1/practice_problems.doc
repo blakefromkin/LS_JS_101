@@ -1,0 +1,12 @@
+Question 1: Will this code raise an error?
+let numbers = [1, 2, 3];
+numbers[6] = 5;
+ANSWER: No, it will have empty spaces that return "undefined"
+
+Question 2: How can you determine if a string ends with "!"?
+ANSWER: Use String.prototype.endsWith('!')
+
+Question 5: What will the following output?
+console.log(false == '0');
+console.log(false === '0');
+Answer: true, false

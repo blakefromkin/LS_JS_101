@@ -1,0 +1,34 @@
+Question 1: Will the following functions return the same result?
+function first() {
+  return {
+    prop1: "hi there"
+  };
+}
+
+function second() {
+  return
+  {
+    prop1: "hi there"
+  };
+}
+
+console.log(first());
+console.log(second());
+ANSWER: NO!! In second(), JS will assume there's supposed to be a semicolon after "return", thus returning "undefined"!!!
+
+
+Question 2: What does the last line output?
+let object = { first: [1] };
+let numArray = object["first"];
+numArray.push(2);
+
+console.log(numArray); //  => "[1, 2]"
+console.log(object);
+ANSWER: Outputs {first: [1,2]} because numArray points to the same array.
+
+
+Question 3 (see course)
+ANSWER:
+A will log "one", "two", "three" (because of shadowing)
+B will log "one", "two", "three" (because of shadowing)
+C will log "two", "three", "one"

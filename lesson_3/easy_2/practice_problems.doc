@@ -1,0 +1,2 @@
+Question 8: How do you check if a variable contains an array?
+ANSWER: Array.isArray(variable);

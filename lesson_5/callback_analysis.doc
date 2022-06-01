@@ -1,0 +1,105 @@
+EXAMPLE 4
+let myArr = [[18, 7], [3, 12]].forEach(arr => {
+  return arr.map(num => {
+    if (num > 5) {
+      return console.log(num);
+    }
+  });
+});
+
+Analysis:
+Action        Performed On    Side Eff  Return          Return Used?
+declaration    myArr           None                      Yes, stored to myArr
+forEach       outer array     None      undefined       No
+callback      each subarray   None      [undef, undef]  No
+map           each subarray   None      new array       Yes, by callback
+callback      elmnts of subs  None      undefined       Yes, by map
+>             elmnts of subs  None      bool            Yes, by "if"
+console.log   elmnts of subs  Prints    undefined       Yes, by callback
+
+This code will log each number in each subarray in myArr. Since forEach ignores callback return value, the value of myArr will be "undefined". The whole snippet will also evaluate to "undefined" since variable declarations always do.
+
+
+
+
+EXAMPLE 5
+[[1, 2], [3, 4]].map(arr => {
+  return arr.map(num => num * 2);
+});
+
+Analysis:
+Action      Performed On    Side Eff    Return                              Return Used?
+map         outer array     none        New arr with subs with doubled nums No
+callback    subarrays       none        Arrs from inner map                 Yes, in map
+inner map   elmnts in subs  none        Subs w/ dbled nums                  Yes, in callback
+callback    elmnts in subs  None        Doubled num                         Yes, in map
+num * 2     num             None        Doubled num                         Yes, in callback
+
+This code snippet will return [[2, 4], [6, 8]]
+
+
+EXAMPLE 6
+[{ a: 'ant', b: 'elephant' }, { c: 'cat', d: 'dog' }].filter(object => {
+  return Object.keys(object).every(key => object[key][0] === key);
+});
+
+Analysis:
+Action      Performed On        Side Eff    Return                  Return used?
+filter      outer array         None        New array               No
+callback    objects in arr      None        Boolean                 By filter
+.keys       objects in arr      None        Keys array              By every
+.every      keys arrs of objs   None        Boolean                 As return for outer callback
+callback    keys arrs of objs   None        Boolean                 By every
+[key]       object arg in filt  None        Value at that key       Yes, by [0]
+[0]         Value from^         None        First char of value     Yes, by ===
+===         Char from^ & callback arg       Boolean                 Yes, by inner callback
+
+This code returns a new array that filters for objects where the first letter of every value is the same as its key. This is only true for the second object, so it returns a one element array containing that object.
+
+
+EXAMPLE 8
+[[[1], [2], [3], [4]], [['a'], ['b'], ['c']]].map(element1 => {
+  return element1.forEach(element2 => {
+    return element2.filter(element3 => {
+      return element3.length > 0;
+    });
+  });
+});
+
+Analysis:
+Action      Performed On        Side Eff    Return                  Return used?
+map         outer array         None                                No
+callback    2 subarrays         None        undefined               By map
+forEach     els in 2 subs^      None        undefined               By callback^
+callback    els in 2 subs^      None        Filtered arr            No
+filter      els in sub subs     None        Filtered arr            By callback^
+callback    els in sub subs     None        Bool                    By filter^
+>           el3 argument        None        Bool                    By callback^
+
+None of the elements in the final callback are true. So filter would return a bunch of empty arrays. But forEach doesn't care about return values... it returns undefined in every case. So map would return [undefined, undefined], which is not used here.
+
+EXAMPLE 9
+[[[1, 2], [3, 4]], [5, 6]].map(arr => {
+  return arr.map(elem => {
+    if (typeof elem === 'number') { // it's a number
+      return elem + 1;
+    } else {                  // it's an array
+      return elem.map(number => number + 1);
+    }
+  });
+});
+
+Analysis:
+Action      Performed On        Side Eff    Return                  Return used?
+map         Array (length 2)    None                                No
+callback    2 subarrays         None        Array                   By outer map
+map         2 subarrays         None        Array                   By callback^
+callback    3 sub subarrays     None        Num or array            By inner map
+typeof      elem arg of cb      None        string                  By ===
+===         2 strings           None        bool                    By if
+elem + 1    elem arg of cb      none        Number                  Returned by callback
+map         sub sub subarrays   none        Array                   Returned by callback
+callback    els of ^^           None        Number                  By map
+number + 1  num arg of cb       None        Number                  Returned by callback
+
+This code ultimately iterates every number in every sub array (and sub sub array) and returns a new array with that reflected. 

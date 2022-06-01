@@ -1,0 +1,118 @@
+RETIRE
+- Problem
+    - Inputs: age, retirement age ... Outputs: current year, retirement year, difference in years between the two
+    - Get age and desired retirement age from user with readline. Output a message that tells them what year it is, in what year they'll retire, and how many years until then.
+
+- Examples
+  - Age: 40, Retirement age: 64
+  - Age: 0, Retirement age: 500
+  - Age: 53, Retirement age: 21
+
+- Data Structure(s)
+  - Just primitive numbers
+
+- Algorithm
+  - Require readline and save to "readline"
+  - Ask user for their current age and save to "age"
+  - Ask user for desired retirement age and save to "retireAge"
+  - Use new Date().getFullYear() (?) to save the current year to "currentYear"
+  - Use string interpolation to output a message with the desired outputs above
+
+
+PALINDROME(1)
+- NOTE: My solution was way too complicated. Could just compare the inputted string to a reversed version of the string.
+- Problem
+  - Inputs: string ... Outputs: true if palindrome, false if not
+  - Input string as the only argument to the function. If the string has an even number of characters, divide it in half. If it has an odd number of characters, divide it in half but leave the middle character out. Check the characters of the two substrings to see if it's a true palindrome (case and all characters matter).
+
+- Examples
+  - 'madam' (expect true)
+  - 'Madam' (expect false)
+  - 'madam i'm adam' (expect false)
+  - '356653' (expect true)
+
+- Data Structures
+-   Strings & an array in order to use array.reverse
+
+- Algorithm
+  - If the string length is even, set both backStart and frontEnd to string.length / 2
+  - If the string is odd, set backStart to Math.ceil(string.length / 2) and frontEnd to Math.floor(string.length / 2)
+  - Create two substrings, one that ends at frontEnd and one that's the reverse of a substring that starts at backStart
+  - Check if the two substrings are equal
+  - If they are, return true. If they're not, return false.
+
+
+PALINDROME(2)
+- Problem
+  - Input: string ... Output: true if it's a palindrome, false if not
+  - Check if a string is a palindrome, while ignoring cases and non-alphanumeric characters.
+
+- Data Structures
+  - Strings and arrays to use array.reverse
+
+- Algorithm
+  - Include isPalindrome (created in previous exercise)
+  - Use toLowerCase to turn the whole string to lowercase
+  - Turn the string to an array and use array.filter to remove all non-alphanumeric characters, then turn it back to a string
+  - Pass that string to isPalindrome
+
+
+PALINDROME numbers
+- Problem
+  - Input: number ... Output: true if palindromic, false if not
+  - Check if a number reads the same forwards and backwards.
+
+- Data Structures
+  - Array to use array.reverse
+
+- Algorithm
+  - Convert the number to a string, then array, use array reverse, and then turn it back to a number. Save this all to a variable reversedNum
+  - Check if reversedNum === num. Return true or false
+
+
+RUNNING TOTAL
+- Problem
+  - Input: array of numbers ... Output: array of same length where each number is the running total from the original array
+  - Scan through the array, keeping a running total. For each element, add the current running total to a new array. Finally, return that new array.
+
+- Data Structures
+  - Arrays
+
+- Algorithm
+  - Create a counter variable
+  - Create an empty array, newArray
+  - Use a for loop to iterate over the initial array
+  - For each element in that array, add that element to the counter, and push the counter into newArray
+  - Return newArray
+
+
+LETTER COUNTER
+- Problem
+    - Input: string of 0 or more words ... Output: object that keeps track of the number of words of different sizes
+    - Calculate the length of each word in the string. Add that length as a key to the object. If the key is already in the object, iterate it for each additional word of that length.
+
+- Data Structures
+    - We'll turn the string into an array, and then use that array to create object.
+
+- Algorithm
+  - Create an array called wordArray with all the words in the string
+  - Create an object called wordLengths
+  - Iterate over wordArray, checking the length of each word.
+    - If wordLengths includes the length, iterate it once.
+    - If wordLengths doesn't include the length, set it to 1
+  - Return wordLengths
+
+LETTER SWAP
+- Problem
+  - Input: string of words (no punctuation) ... Output: that string with the first and last letters of each word swapped
+  - Iterate over each word in the string and change the value of the first and last letters of the word to be each other.
+
+- Data Structures
+  - Strings and an array of strings
+
+- Algorithm
+  - Create an array called wordArray by splitting the string at the spaces
+  - Create a variable called charHolder
+  - Iterate over every word in wordArray
+    - For each word, set charHolder = the first letter, change the first letter to the last letter, and change the last letter to charHolder (This didn't work because you can't mutate a string!!!!!)
+  - Change the array back to a string with join, and return the string

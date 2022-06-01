@@ -1,0 +1,32 @@
+input: string
+output: array of substrings
+explicit requirements:
+  - all palindromic substrings should be added to an array which is returned
+  - palindromes are case sensitive
+implicit requirements:
+  - an empty string should return an empty string
+
+
+PROBLEM: Given a string, return a new string with every other word review
+input: string
+output: new string
+explicit requirements:
+  - Output must be a string
+  - That string must have every other word from the original string removed
+implicit requirements:
+  - An empty string should return an empty string
+Questions:
+  - What do we mean by every other word? Should that start with the first word?
+  - How do we define "word" in this context?
+
+PROBLEM (see video in lesson)
+2
+4 6
+8 10 12
+14 16 18 20
+
+The last number in each row n is n * (n + 1). So:
+let sum = n * (n + 1);
+for (let idx = n; idx > 0; idx--) {
+  sum += sum - 2;
+}

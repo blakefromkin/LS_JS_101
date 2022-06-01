@@ -1,0 +1,36 @@
+Question 1: What is the return value?
+[1, 2, 3].filter(num => 'hi');
+ANSWER: [1, 2, 3] since 'hi' is always truthy
+
+Question 2: What is the return value?
+[1, 2, 3].map(num => {
+  num * num;
+});
+ANSWER: [undefined, undefined, undefined] because there's no return statement
+
+Question 3: What about this alteration?
+[1, 2, 3].map(num => num * num);
+ANSWER: [1, 4, 9] because single line (no brace) callbacks don't need "return"
+
+Question 4: What is the return value?
+['ant', 'bear', 'caterpillar'].pop().length;
+ANSWER: 11 because pop() returns 'caterpillar'
+
+Question 5: What is the callback's return value? And every's return value?
+[1, 2, 3].every(num => {
+  return num = num * 2;
+});
+ANSWER: Callback always returns truthy (2, 4, 6) because assignments return the value on the right hand side. Every returns true because of that.
+
+Question 6: How does array.prototype.fill() work? Is it destructive? Example:
+let arr = [1, 2, 3, 4, 5]
+arr.fill(1, 1, 5);
+ANSWER: Changes all values in an array to a static value, from a start index to an end index, and returns the modified array. So line 2 would return [1, 1, 1, 1, 1]
+
+Question 7: What is the return value of map here? Why?
+['ant', 'bear'].map(elem => {
+  if (elem.length > 3) {
+    return elem;
+  }
+});
+ANSWER: [undefined, 'bear'] because the function has no explicit return value for an element with length <= 3

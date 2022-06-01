@@ -1,0 +1,51 @@
+Question 4: Is there a difference between these two methods?
+function addToRollingBuffer1(buffer, maxBufferSize, newElement) {
+  buffer.push(newElement);
+  if (buffer.length > maxBufferSize) {
+    buffer.shift();
+  }
+  return buffer;
+}
+
+function addToRollingBuffer2(buffer, maxBufferSize, newElement) {
+  buffer = buffer.concat(newElement);
+  if (buffer.length > maxBufferSize) {
+    buffer.shift();
+  }
+  return buffer;
+}
+ANSWER: Yes there's a difference. The second function changes where the pointer "buffer" points to, thereby returning a fully different array by the end. The first function returns the original array.
+
+
+Question 5: What will the following two lines output?
+console.log(0.3 + 0.6);
+console.log(0.3 + 0.6 === 0.9);
+ANSWER: 0.9 and true (WRONG. Because floating point numbers lack accuracy, this would be something like 0.89999999999 and false!!)
+
+
+Question 6: What will the following output?
+let nanArray = [NaN];
+console.log(nanArray[0] === NaN);
+ANSWER: Will log false, because NaN doesn't === itself.
+BONUS: How can you reliably test if a value is NaN?
+ANSWER: Use Number.isNaN()
+
+
+Question 7: What will this output?
+let answer = 42;
+
+function messWithIt(someNumber) {
+  return (someNumber += 8);
+}
+
+let newAnswer = messWithIt(answer);
+
+console.log(answer - 8);
+ANSWER: It will return 34. answer wasn't changed by the function because it was passed by value.
+
+
+Question 8 (see course)
+ANSWER: Yes, the object will be affected because it is passed by reference.
+
+Question 10 (see course)
+ANSWER: Returns "no"
