@@ -1,0 +1,21 @@
+Q1: Why does this throw a TypeError, saying: Cannot read property 'forEach' of undefined?
+let ladder = ''
+
+['head', 'heal', 'teal', 'tell', 'tall', 'tail'].forEach(word => {
+  if (ladder !== '') {
+    ladder += '-'
+  }
+
+  ladder += word
+})
+
+console.log(ladder)  // expect: head-heal-teal-tell-tall-tail
+
+ANSWER: Missing semicolon after line 2
+
+
+Q3: One bored and hungry evening we decided to randomly generate recipes. We can't wait to see the first suggestions, but JavaScript raises a TypeError, telling us that dishName.join is not a function. What is wrong?
+
+(See random.js for code)
+
+ANSWER: Trying to combine arrays with + when you should combine strings. This leads to the code trying to use join on a string, which doesn't work

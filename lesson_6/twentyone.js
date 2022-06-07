@@ -3,6 +3,7 @@ const NUM_OF_SUITS = 4;
 const LIMIT = 21;
 const ROYALS = ['Jack', 'Queen', 'King'];
 const DEALER_LIMIT = 17;
+const GAMES_FOR_MATCH_WIN = 5;
 
 // IMPORT READLINE
 let readline = require('readline-sync');
@@ -161,116 +162,181 @@ function displayInfo(hand, score, player) {
   }
 }
 
+// FUNCTIONS FOR KEEPING MATCH SCORE
+function initalizeScoreboard() {
+  return {
+    player: 0,
+    dealer: 0
+  };
+}
+
+function updateScoreboard(gameWinner, scoreboard) {
+  switch (gameWinner) {
+    case 'player':
+      scoreboard.player += 1;
+      break;
+    case 'dealer':
+      scoreboard.dealer += 1;
+      break;
+    default:
+      break;
+  }
+}
+
+function isMatchWinner(scoreboard) {
+  return !!detectMatchWinner(scoreboard);
+}
+
+function detectMatchWinner(scoreboard) {
+  if (scoreboard.player === GAMES_FOR_MATCH_WIN) return 'You';
+  if (scoreboard.dealer === GAMES_FOR_MATCH_WIN) return 'Dealer';
+  // no match winner
+  return null;
+}
+
 
 // START GAME LOOP ***********************************************************
 
-while (true) {
-  console.clear();
+while (true) { // MATCH LEVEL
+  let scoreboard = initalizeScoreboard();
 
-  // SET INITIAL VARIABLES
-  let deck = initializeDeck();
-  let gameOver = false;
-  let hitOrStay;
-  let newPlayerCard;
-  let newDealerCard;
-
-  let playerHand = [randomCard(deck), randomCard(deck)];
-  let playerScore = handTotal(playerHand);
-
-  let dealerHand = [randomCard(deck), randomCard(deck)];
-  let dealerScore = handTotal(dealerHand);
-
-  prompt('Welcome to 21!\n');
-  prompt(`The dealer has ${dealerHand[0]} and an unknown card.`);
-
-  // USER TURN
-  while (true) {
-    // Tell user the current hands and scores
-    displayInfo(playerHand, playerScore, 'player');
-
-    // Ask if they want to hit or stay
-    hitOrStay = askHitOrStay();
+  while (true) { // GAME LEVEL
     console.clear();
 
-    if (hitOrStay === 'hit') { // If they hit
-      // Draw a new card. Update hand and score.
-      newPlayerCard = randomCard(deck);
-      playerHand.push(newPlayerCard);
-      playerScore = handTotal(playerHand);
+    // SET INITIAL VARIABLES
+    let deck = initializeDeck();
+    let gameOver = false;
+    let hitOrStay;
+    let newPlayerCard;
+    let newDealerCard;
 
-      // Tell them their new card
-      prompt(`You drew ${newPlayerCard}`);
+    let playerHand = [randomCard(deck), randomCard(deck)];
+    let playerScore = handTotal(playerHand);
 
-      // Check if they busted
-      if (detectBust(playerScore)) {
-        prompt('You busted!');
-        gameOver = true;
+    let dealerHand = [randomCard(deck), randomCard(deck)];
+    let dealerScore = handTotal(dealerHand);
+
+    prompt('Welcome to 21!\n');
+    prompt(`The dealer has ${dealerHand[0]} and an unknown card.`);
+
+    // USER TURN
+    while (true) {
+      // Tell user the current hands and scores
+      displayInfo(playerHand, playerScore, 'player');
+
+      // Ask if they want to hit or stay
+      hitOrStay = askHitOrStay();
+      console.clear();
+
+      if (hitOrStay === 'hit') { // If they hit
+        // Draw a new card. Update hand and score.
+        newPlayerCard = randomCard(deck);
+        playerHand.push(newPlayerCard);
+        playerScore = handTotal(playerHand);
+
+        // Tell them their new card
+        prompt(`You drew ${newPlayerCard}`);
+
+        // Check if they busted
+        if (detectBust(playerScore)) {
+          prompt('You busted!');
+          updateScoreboard('dealer', scoreboard);
+          gameOver = true;
+          break;
+        }
+
+        // Check if they got a direct hit win
+        if (detectDirectHitWin(playerScore)) {
+          prompt(`Your score is ${LIMIT}. You win the game!`);
+          updateScoreboard('player', scoreboard);
+          gameOver = true;
+          break;
+        }
+      }
+
+      if (hitOrStay === 'stay') {
+        // Check if they got a direct hit win
+        if (detectDirectHitWin(playerScore)) {
+          prompt(`Your score is ${LIMIT}. You win the game!`);
+          updateScoreboard('player', scoreboard);
+          gameOver = true;
+          break;
+        }
+        break;
+      }
+    } // END USER TURN
+
+
+    if (gameOver === true) {
+      console.log(scoreboard);
+      // Check for match winners
+      if (isMatchWinner(scoreboard)) {
+        prompt(`${detectMatchWinner(scoreboard)} won the match!`);
+      }
+      // Ask to play again
+      if (playAgain()) continue;
+      break;
+    }
+
+    // DEALER TURN
+    console.clear();
+
+    prompt('The dealer reveals their second card...');
+
+    while (true) {
+      displayInfo(dealerHand, dealerScore, 'dealer');
+
+      // Check if dealer won
+      if (detectDealerWin(dealerScore, playerScore)) {
+        announceDealerWin(dealerScore, playerScore);
+        updateScoreboard('dealer', scoreboard);
         break;
       }
 
-      // Check if they got a direct hit win
-      if (detectDirectHitWin(playerScore)) {
-        prompt(`Your score is ${LIMIT}. You win!`);
-        gameOver = true;
+      // Check if dealer is above dealer limit
+      if (dealerScore >= DEALER_LIMIT) {
+        prompt(`By rule, dealer stays.`);
+        // If player win...
+        if (detectPlayerWin(dealerScore, playerScore)) {
+          announcePlayerWin(dealerScore, playerScore);
+          updateScoreboard('player', scoreboard);
+        } else { // If tie...
+          prompt(`You both scored ${playerScore}. It's a tie!`);
+        }
         break;
       }
-    }
 
-    if (hitOrStay === 'stay') {
-      break;
-    }
-  } // END USER TURN
+      // Otherwise, dealer hits again...
+      newDealerCard = randomCard(deck);
+      dealerHand.push(newDealerCard);
+      dealerScore = handTotal(dealerHand);
 
-  if (gameOver === true) {
-    if (playAgain()) {
-      continue;
-    } else {
-      break;
-    }
-  }
+      // Tell player what dealer drew and their new hand and score
+      prompt(`The dealer draws ${newDealerCard}`);
 
-  // DEALER TURN
-  console.clear();
-
-  prompt('The dealer reveals their second card...');
-
-  while (true) {
-    displayInfo(dealerHand, dealerScore, 'dealer');
-
-    // Check if dealer won
-    if (detectDealerWin(dealerScore, playerScore)) {
-      announceDealerWin(dealerScore, playerScore);
-      break;
-    }
-
-    // Check if dealer is above dealer limit
-    if (dealerScore >= DEALER_LIMIT) {
-      prompt(`By rule, dealer stays.`);
-      // If player win...
-      if (detectPlayerWin(dealerScore, playerScore)) {
-        announcePlayerWin(dealerScore, playerScore);
-      } else { // If tie...
-        prompt(`You both scored ${playerScore}. It's a tie!`);
+      // Check if dealer busted
+      if (detectBust(dealerScore)) {
+        prompt(`Dealer busted with a score of ${dealerScore}. You win!`);
+        updateScoreboard('player', scoreboard);
+        break;
       }
+    } // END DEALER TURN
+
+    // Check for match wins
+    if (isMatchWinner(scoreboard)) {
+      prompt(`${detectMatchWinner(scoreboard)} won the match!`);
       break;
     }
 
-    // Otherwise, dealer hits again...
-    newDealerCard = randomCard(deck);
-    dealerHand.push(newDealerCard);
-    dealerScore = handTotal(dealerHand);
-
-    // Tell player what dealer drew and their new hand and score
-    prompt(`The dealer draws ${newDealerCard}`);
-
-    // Check if dealer busted
-    if (detectBust(dealerScore)) {
-      prompt(`Dealer busted with a score of ${dealerScore}. You win!`);
-      break;
-    }
+    // Finally, ask to play again
+    if (playAgain()) continue;
+    break;
   }
-  // Finally, handle the play again situation
-  if (playAgain()) continue;
+
+  if (isMatchWinner(scoreboard)) {
+    if (playAgain()) continue;
+    break;
+  }
   break;
 }
 
